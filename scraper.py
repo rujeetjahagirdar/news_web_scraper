@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 
 
@@ -14,6 +15,15 @@ with open('news_urls.txt','r') as f:
             resp = requests.get(url)
             print(resp)
             soup = BeautifulSoup(resp.content, 'html.parser')
-            print(soup.title.string)
-            print(soup.text)
-            #print(soup.find('div',id='body'))
+            print("Title:",soup.title.string)
+            #print(soup.text)
+            result=str(soup.find_all('div',class_='Article__subtitle'))
+            l1=result.split('<')
+            l2=[]
+            regex = re.compile('[\[\]@_!#$%^&*()<>?/\|}{~:]')
+            for i in l1:
+                for j in i.split('>'):
+                    if(regex.search(j)== None):
+                        l2.append(j)
+            print("Author:",l2[0])
+            print("Date:",l2[2])
